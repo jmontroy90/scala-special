@@ -76,14 +76,13 @@ abstract class TweetSet {
    * Question: Should we implment this method here, or should it remain abstract
    * and be implemented in the subclasses?
    */
-    // i think you can do this without isInstance by doing the subclasses right
+
     def descendingByRetweet: TweetList = {
-      def getTweetList(ts: TweetSet, acc: TweetList): TweetList = {
-        if (ts.isInstanceOf[Empty]) acc
-        else getTweetList(ts.remove(ts.mostRetweeted), new Cons(ts.mostRetweeted, acc))
-      }
-      getTweetList(remove(mostRetweeted), new Cons(mostRetweeted, Nil))
+      if (isEmpty) Nil
+      else new Cons(mostRetweeted, remove(mostRetweeted).descendingByRetweet)
     }
+
+    def isEmpty: Boolean
   
   /**
    * The following methods are already implemented
@@ -121,6 +120,7 @@ class Empty extends TweetSet {
 
   def mostRetweeted: Tweet = throw new java.util.NoSuchElementException()
 
+  def isEmpty: Boolean = true
   /**
    * The following methods are already implemented
    */
@@ -151,11 +151,13 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
         if (tw1.retweets > tw2.retweets) tw1
         else tw2
       }
-      if (left.isInstanceOf[Empty] && right.isInstanceOf[Empty]) elem
-      else if (left.isInstanceOf[Empty]) findMax(right.mostRetweeted, elem)
-      else if (right.isInstanceOf[Empty]) findMax(left.mostRetweeted, elem)
+      if (left.isEmpty && right.isEmpty) elem
+      else if (left.isEmpty) findMax(right.mostRetweeted, elem)
+      else if (right.isEmpty) findMax(left.mostRetweeted, elem)
       else findMax(left.mostRetweeted, findMax(right.mostRetweeted, elem))
     }
+
+    def isEmpty: Boolean = false
 
     
   /**
@@ -211,41 +213,44 @@ object GoogleVsApple {
   val google = List("android", "Android", "galaxy", "Galaxy", "nexus", "Nexus")
   val apple = List("ios", "iOS", "iphone", "iPhone", "ipad", "iPad")
 
-  lazy val googleTweets: TweetSet = ???
-  lazy val appleTweets: TweetSet = ???
+  lazy val googleTweets: TweetSet = TweetReader.allTweets.filter((tw: Tweet) => google.exists(tw.text.contains(_)))
+  lazy val appleTweets: TweetSet = TweetReader.allTweets.filter((tw: Tweet) => apple.exists(tw.text.contains(_)))
   
   /**
    * A list of all tweets mentioning a keyword from either apple or google,
    * sorted by the number of retweets.
    */
-  lazy val trending: TweetList = ???
+  lazy val trending: TweetList = googleTweets.union(appleTweets).descendingByRetweet
 }
 
 object Main extends App {
-  def asSet(tweets: TweetSet): Set[Tweet] = {
-    var res = Set[Tweet]()
-    tweets.foreach(res += _)
-    res
-  }
+//   Print the trending tweets
+//    GoogleVsApple.trending.foreach(println)
 
-  def size(set: TweetSet): Int = asSet(set).size
-  // Print the trending tweets
-  //  GoogleVsApple.trending foreach println
-  val set1 = new Empty
-  val set2 = set1.incl(new Tweet("a", "a body", 20))
-  val set3 = set2.incl(new Tweet("b", "b body", 30))
-  val c = new Tweet("c", "c body", 45)
-  val d = new Tweet("d", "d body", 50)
-  val set4c = set3.incl(c)
-  val set4d = set3.incl(d)
-  val set5 = set4c.incl(d)
-
-  val ns = set4c.union(set4d)
-
-//  println(ns.mostRetweeted)
-//  println(ns.descendingByRetweet.foreach(x => println(x)))
-
-//  print(set4c.toString)
-//  println(set5.filter(tw => tw.user == "a"))
+  // old test stuff
+  //  def asSet(tweets: TweetSet): Set[Tweet] = {
+//    var res = Set[Tweet]()
+//    tweets.foreach(res += _)
+//    res
+//  }
+//
+//  def size(set: TweetSet): Int = asSet(set).size
+//  val set1 = new Empty
+//  val set2 = set1.incl(new Tweet("a", "a body", 20))
+//  val set3 = set2.incl(new Tweet("b", "b body", 30))
+//  val c = new Tweet("c", "c body", 45)
+//  val d = new Tweet("d", "d body", 50)
+//  val set4c = set3.incl(c)
+//  val set4d = set3.incl(d)
+//  val set5 = set4c.incl(d)
+//
+//  val ns = set4c.union(set4d)
+//
+//  val trends = set5.descendingByRetweet
+//
+//  trends.foreach(tw => println(tw.toString))
+//
+////  print(set4c.toString)
+////  println(set5.filter(tw => tw.user == "a"))
 
 }

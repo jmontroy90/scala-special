@@ -15,7 +15,11 @@ object Main extends App {
   val f2_f = filter(f2, (x: Int) => x > 3)
   val f3 = intersect(union(s1,s2), union(s2,s3))
 
-  println(exists(f2, (x: Int) => x == 4))
+  contains(f2_f, 4)
+  printSet(f1)
+  printSet(f3)
+  printSet(f2_f)
+//  println(exists(f2, (x: Int) => x == 4))
 
 //  println(contains(f1,4)) // in set, meets condition
 //  println(contains(f2_f, 3)) // in set, doesn't meet condition
