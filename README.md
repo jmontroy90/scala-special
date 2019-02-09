@@ -1,3 +1,3 @@
 # scala-special
 
-All work and code for the 2016 Scala Specialization (four courses)
+All work and code for the Coursera Scala Specialization (four courses)
