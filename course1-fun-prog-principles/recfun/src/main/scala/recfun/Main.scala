@@ -62,6 +62,5 @@ object Main {
     else if (money < 0) 0 // missed making change with current head coin
     else if (coins.isEmpty) 0 // couldn't make change
     else countChange(money, coins.tail) + countChange(money - coins.head, coins) // this is the magic.
-
   }
 }
