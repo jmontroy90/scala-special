@@ -116,6 +116,4 @@ abstract class QuickCheckHeap extends Properties("Heap") with IntHeap {
 
     toList(meld(h1, h2)).reverse == (toList(h1) ++ toList(h2)).sorted
   }
-
-
 }
