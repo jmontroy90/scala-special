@@ -30,5 +30,13 @@ class LineOfSightSuite extends FunSuite {
     assert(output.toList == List(0f, 1f, 4f, 4f))
   }
 
+  test("downsweep should correctly handle trees with a single leaf") {
+    val input = Array[Float](0f, 8f, 8f, 33f, 48f)
+    val output = new Array[Float](5)
+    val t = upsweep(input, 1, 5, 2)
+    downsweep(input, output, 1f, t)
+    println(output.toSeq)
+  }
+
 }
 

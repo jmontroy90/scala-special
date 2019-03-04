@@ -73,10 +73,10 @@ object ParallelParenthesesBalancing {
     }
 
     def reduce(from: Int, until: Int): (Int, Int) = {
-      if (until - from < threshold) {
+      if (until - from <= threshold) {
         traverse(from, until)
       } else {
-        val mid = ((until - from) / 2) + from
+        val mid = from + (until - from) / 2
         val t = parallel(
           reduce(from, mid),
           reduce(mid, until)
@@ -87,6 +87,8 @@ object ParallelParenthesesBalancing {
     }
 
     val res = reduce(0, chars.length)
-    if (res._1 == res._2) true else false
+    if (res._1 < 0) false
+    else if (res._1 == res._2) true
+    else false
   }
 }

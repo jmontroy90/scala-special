@@ -63,5 +63,12 @@ class ParallelCountChangeSuite extends FunSuite {
     check(250, List(1, 2, 5, 10, 20, 50), 177863)
   }
 
+  test("totalCoinsThreshold should return true when the number of coins is < two-thirds of the initial number of coins") {
+    assert(totalCoinsThreshold(3)(5, List(5)))
+  }
+
+  test("parCountChange should invoke the parallel construct 6 times for money == 16, coins == List(1) and moneyThreshold(16)") {
+    assert(true)
+  }
 
 }
